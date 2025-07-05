@@ -93,17 +93,9 @@ if (isset($_POST['read_notif'])) {
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(220, 53, 69, 0.1);
         }
-        .dashboard-title {
-            color: #dc3545;
-            font-weight: bold;
-        }
         .role-badge {
             margin-right: 6px;
             margin-bottom: 6px;
-        }
-        .dashboard-btn {
-            margin: 10px;
-            border-radius: 0;
         }
         .logo {
             height: 50px;
@@ -114,32 +106,50 @@ if (isset($_POST['read_notif'])) {
             color: #888;
             font-size: 0.9rem;
         }
+        .dashboard-btn {
+            height: 120px;
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        #notif-popup {
+            max-height: 300px;
+            overflow-y: auto;
+            position: absolute;
+            right: 20px;
+            top: 70px;
+            width: 300px;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
-<div class="wrapper">
-<div class="container dashboard-container">
-   <!-- Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <img src="../assets/DonateX.png" class="me-2 logo" alt="DonateX">
-        <h3 class="mb-0 text-danger fw-bold">DonateX</h3>
-    </div>
-    <div class="d-flex align-items-center gap-2">
-        <button type="button" class="btn btn-outline-dark position-relative" onclick="toggleNotif()">
-            <i class="bi bi-bell"></i>
-            <?php if ($unread_count > 0): ?>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    <?php echo $unread_count; ?>
-                </span>
-            <?php endif; ?>
-        </button>
-        <form method="POST" onsubmit="return confirm('Are you sure you want to logout?');">
-            <button type="submit" name="logout" class="btn btn-outline-danger"><i class="bi bi-box-arrow-right"></i> Logout</button>
-        </form>
-    </div>
-</div>
 
+<div class="wrapper">
+<div class="container dashboard-container position-relative">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <img src="../assets/DonateX.png" class="me-2 logo" alt="DonateX">
+            <h3 class="mb-0 text-danger fw-bold">DonateX</h3>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-outline-dark position-relative" onclick="toggleNotif()">
+                <i class="bi bi-bell"></i>
+                <?php if ($unread_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?php echo $unread_count; ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+            <form method="POST" onsubmit="return confirm('Are you sure you want to logout?');">
+                <button type="submit" name="logout" class="btn btn-outline-danger"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            </form>
+        </div>
+    </div>
 
     <!-- User Info Card -->
     <div class="p-3 mb-4 border rounded bg-light">
@@ -183,51 +193,53 @@ if (isset($_POST['read_notif'])) {
         <?php endif; ?>
     </div>
 
-    <!-- Dashboard Options -->
-    <div class="row text-center mt-4">
-        <div class="col-md-6 col-lg-4">
-            <a href="volunteer.php" class="btn btn-<?php echo in_array('Volunteer', $role_list) ? 'primary' : 'secondary disabled'; ?> dashboard-btn w-100">
-                <i class="bi bi-people"></i> Volunteer
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="donor.php" class="btn btn-<?php echo in_array('Donor', $role_list) ? 'success' : 'secondary disabled'; ?> dashboard-btn w-100">
-                <i class="bi bi-box"></i> Donor (Food & Things)
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="blood_donor.php" class="btn btn-<?php echo in_array('Blood Donor', $role_list) ? 'danger' : 'secondary disabled'; ?> dashboard-btn w-100">
-                <i class="bi bi-droplet-half"></i> Blood Donor
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4 mt-3">
-            <a href="help_seeker.php" class="btn btn-<?php echo in_array('Help Seeker', $role_list) ? 'warning text-dark' : 'secondary disabled'; ?> dashboard-btn w-100">
-                <i class="bi bi-person-lines-fill"></i> Help Seeker
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4 mt-3">
-            <a href="edit_profile.php" class="btn btn-dark dashboard-btn w-100">
-                <i class="bi bi-gear"></i> Edit Profile
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4 mt-3">
-            <a href="reports.php" class="btn btn-info text-white dashboard-btn w-100">
-                <i class="bi bi-bar-chart"></i> Reports
-            </a>
-        </div>
+    <!-- Dashboard Buttons (3 per row) -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 text-center mt-4">
+    <div class="col">
+        <a href="volunteer.php" class="btn btn-<?php echo in_array('Volunteer', $role_list) ? 'primary' : 'secondary disabled'; ?> dashboard-btn w-100">
+            <i class="bi bi-people fs-3 d-block mb-1"></i> Volunteer
+        </a>
     </div>
+    <div class="col">
+        <a href="donor.php" class="btn btn-<?php echo in_array('Donor', $role_list) ? 'success' : 'secondary disabled'; ?> dashboard-btn w-100">
+            <i class="bi bi-box fs-3 d-block mb-1"></i> Donor
+        </a>
+    </div>
+    <div class="col">
+        <a href="blood_donor.php" class="btn btn-<?php echo in_array('Blood Donor', $role_list) ? 'danger' : 'secondary disabled'; ?> dashboard-btn w-100">
+            <i class="bi bi-droplet-half fs-3 d-block mb-1"></i> Blood Donor
+        </a>
+    </div>
+    <div class="col">
+        <a href="help_seeker.php" class="btn btn-<?php echo in_array('Help Seeker', $role_list) ? 'warning text-dark' : 'secondary disabled'; ?> dashboard-btn w-100">
+            <i class="bi bi-person-lines-fill fs-3 d-block mb-1"></i> Help Seeker
+        </a>
+    </div>
+    <div class="col">
+        <a href="reports.php" class="btn btn-info text-white dashboard-btn w-100">
+            <i class="bi bi-bar-chart fs-3 d-block mb-1"></i> Reports
+        </a>
+    </div>
+    <div class="col">
+        <a href="edit_profile.php" class="btn btn-dark dashboard-btn w-100">
+            <i class="bi bi-gear fs-3 d-block mb-1"></i> Edit Profile
+        </a>
+    </div>
+</div>
 
-    <footer>
+
+    <footer class="mt-5">
         &copy; <?php echo date('Y'); ?> DonateX. All rights reserved.
     </footer>
 </div>
 </div>
 
 <script>
-    function toggleNotif() {
-        const popup = document.getElementById('notif-popup');
-        popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
-    }
+function toggleNotif() {
+    const popup = document.getElementById('notif-popup');
+    popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+}
 </script>
+
 </body>
 </html>
