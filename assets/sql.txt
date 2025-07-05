@@ -63,3 +63,17 @@ CREATE TABLE volunteer_responses (
     FOREIGN KEY (volunteer_request_id) REFERENCES volunteer_requests(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE donations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    quantity VARCHAR(50),
+    status ENUM('available', 'claimed', 'approved', 'rejected') DEFAULT 'available',
+    claimed_by INT DEFAULT NULL,
+    claimed_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (claimed_by) REFERENCES users(id)
+);
