@@ -5,6 +5,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Debugging: Show errors during development
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 if (!isset($_GET['request_id'])) {
     echo "Invalid Request.";
     exit();
@@ -12,15 +16,7 @@ if (!isset($_GET['request_id'])) {
 
 $request_id = intval($_GET['request_id']);
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "donatex";
-$conn = new mysqli($host, $user, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+require_once 'db.php';
 // Verify this request belongs to the logged-in user
 $check_stmt = $conn->prepare("SELECT id FROM blood_requests WHERE id = ? AND user_id = ?");
 $check_stmt->bind_param("ii", $request_id, $_SESSION['user_id']);
@@ -49,7 +45,7 @@ $stmt->close();
 // Handle thank you
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['thank_you_user_id'])) {
     $recipient_id = intval($_POST['thank_you_user_id']);
-    $message = "🙏 Thank you for volunteering to help with a blood request!";
+    $message = "Thank you for volunteering to help with a blood request!";
     $insert = $conn->prepare("INSERT INTO notifications (user_id, message) VALUES (?, ?)");
     $insert->bind_param("is", $recipient_id, $message);
     $insert->execute();

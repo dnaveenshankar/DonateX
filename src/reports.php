@@ -7,10 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$conn = new mysqli("localhost", "root", "", "donatex");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'db.php';
 
 $stats = [
     'my_blood_requests' => 0,

@@ -6,15 +6,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "donatex";
-$conn = new mysqli($host, $user, $password, $dbname);
+// Debugging: Show errors during development
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'db.php';
 
 $user_id = $_SESSION['user_id'];
 
@@ -45,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raise_request'])) {
     $notif_query->execute();
     $result = $notif_query->get_result();
 
-    $message = "🩸 Blood request for group $req_blood_group raised by $name. Respond if you can save a life.";
+    $message = "Blood request for group $req_blood_group raised by $name. Respond if you can save a life.";
     while ($row = $result->fetch_assoc()) {
         $uid = $row['id'];
         $notify = $conn->prepare("INSERT INTO notifications (user_id, message) VALUES (?, ?)");

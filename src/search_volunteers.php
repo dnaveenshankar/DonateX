@@ -5,15 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "donatex";
-$conn = new mysqli($host, $user, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+require_once 'db.php';
 $search = $_GET['search'] ?? '';
 
 // Fetch volunteers
